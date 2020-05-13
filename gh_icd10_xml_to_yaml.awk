@@ -35,18 +35,22 @@
 
 	# Changes to the entire line
 
-	# Delete unnecesary text
+	# Delete unnecesary start and end texts
+	gsub("<field name=\"", "", $0)
 	gsub("\"></field>", "", $0)
 	gsub("</field>", "", $0)
-	gsub("<field name=\"", "", $0)
 
-	# Replace entire line portions
-	gsub("\">", ": ", $0)
+	# Separate names from values
 	gsub("\" ref=\"", ": ", $0)
+	gsub("\">", ": ", $0)
 
-	# Changes to individual columns
+	# Add quotes to all values except the following: "active:"
+	if ($1!="active:") {
+		$2 = "\"" $2
+		$0 = "\t" $0 "\""
+	}
 
-	# Conditional field name changes
+	# Change field names conditionally
 	if ($1=="code:") $1="\ticd_10:"
 	if ($1=="category:") $1="\ticd_10_cat:"
 
