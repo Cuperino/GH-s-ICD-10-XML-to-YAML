@@ -28,37 +28,37 @@
 # Pattern matching
 
 /<record/ {
-	print "- model: medicalorders.diagnosis\n	fields: "
+    print "- model: medicalorders.diagnosis\n  fields: "
 }
 
 /<field/ {
 
-	# Changes to the entire line
+    # Changes to the entire line
 
-	# Delete unnecesary start and end texts
-	gsub("<field name=\"", "", $0)
-	gsub("\"></field>", "", $0)
-	gsub("</field>", "", $0)
+    # Delete unnecesary start and end texts
+    gsub("\t<field name=\"", "", $0)
+    gsub("\"></field>", "", $0)
+    gsub("</field>", "", $0)
 
-	# Separate names from values
-	gsub("\" ref=\"", ": ", $0)
-	gsub("\">", ": ", $0)
+    # Separate names from values
+    gsub("\" ref=\"", ": ", $0)
+    gsub("\">", ": ", $0)
 
-	# Add quotes to all values except the following: "active:"
-	if ($1!="active:") {
-		$2 = "\"" $2
-		$0 = "\t" $0 "\""
-	}
+    # Add quotes to all values except the following: "active:"
+    if ($1!="active:") {
+        $2 = "\"" $2
+        $0 = $0 "\""
+    }
 
-	# Change field names conditionally
-	if ($1=="code:") $1="\ticd_10:"
-	if ($1=="category:") $1="\ticd_10_cat:"
+    # Change field names conditionally
+    if ($1=="code:") $1="icd_10:"
+    if ($1=="category:") $1="icd_10_cat:"
 
-	# Generate output
-	print "\t" $0
+    # Generate output
+    print "    " $0
 }
 
-# END { action; }'  # Left for reference
+# END { action; }  # Left for reference
 
 # Accept file input argument
 input_file
